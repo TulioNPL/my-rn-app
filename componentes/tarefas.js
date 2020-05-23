@@ -1,29 +1,30 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, FlatList } from 'react-native';
 import Titulo1 from './titulo1';
+import Tarefa from './tarefa.js';
 
 export default function Tarefas({ lista }) {
     return (
-        <View style={estilos.lista}>
-            <Titulo1>Minhas tarefas</Titulo1>
-            {lista.map((item) => (
-                <View key={item.id} style={estilos.caixaItem}>
-                    <Text style={estilos.textoItem}>{item.descricao}</Text>
-                </View>
-            ))}
-        </View>);
+        <FlatList
+            data={lista}
+
+            renderItem={({ item }) => (
+                <Tarefa id={item.id} descricao={item.descricao}/>
+            )}
+
+            keyExtractor={(item) => item.id}
+            ListHeaderComponent={() => <Titulo1>Minhas tarefas</Titulo1>}
+            ItemSeparatorComponent={() => <View style={estilos.separador}/>}
+        />
+    );
 }
 
 const estilos = StyleSheet.create({
-    caixaItem: {
-        borderBottomColor: '#306090',
-        borderBottomWidth: 1,
-        padding: 15,
-    },
-    textoItem: {
-        fontSize: 16,
-    },
     lista: {
         flex: 1,
     },
+    separador: {
+        height: 1,
+        backgroundColor: '#CED0CE',
+    },  
 })

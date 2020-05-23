@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View} from 'react-native';
 import Constants from 'expo-constants';
 import NavBar from './componentes/navbar';
 import Tarefas from './componentes/tarefas';
