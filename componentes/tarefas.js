@@ -3,13 +3,13 @@ import { StyleSheet, Text, View, ScrollView, FlatList } from 'react-native';
 import Titulo1 from './titulo1';
 import Tarefa from './tarefa.js';
 
-export default function Tarefas({ lista }) {
+export default function Tarefas(props) {
     return (
         <FlatList
-            data={lista}
+            data={props.lista}
 
             renderItem={({ item }) => (
-                <Tarefa id={item.id} descricao={item.descricao}/>
+                <Tarefa id={item.id} descricao={item.descricao} onAltera={props.onAltera} onApaga={props.onApaga}/>
             )}
 
             keyExtractor={(item) => item.id}
