@@ -1,16 +1,38 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, KeyboardAvoidingView, Platform, Button, Keyboard } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, TextInput, KeyboardAvoidingView, Platform, Button, Keyboard, AsyncStorage } from 'react-native';
 import Constants from 'expo-constants';
 import NavBar from './componentes/navbar';
 import Tarefas from './componentes/tarefas';
 
 export default function App() {
   let _input;
-  const [tarefas, setTarefas] = useState([
-    {id: '1', descricao: 'Pagar as contas'},
-    {id: '2', descricao: 'Lavar o carro'}
-  ]);
+  const [tarefas, setTarefas] = useState([]);
   const [campo, setCampo] = useState('');
+
+  const armazenaDados = async () => {
+    try {
+      await AsyncStorage.setItem('tarefas', JSON.stringify(tarefas));
+    } catch (e) {
+      Alert.alert('Os não foram armazenados!');
+    }
+  }
+
+  const recuperaDados = async () => {
+    try {
+      const t = await AsyncStorage.getItem('tarefas');
+      if(t!==null) setTarefas(JSON.parse(t));
+    } catch (e) {
+      Alert.alert('Os não foram carregados!');
+    }
+  }
+
+  useEffect(() => {
+    recuperaDados();
+  }, []);
+
+  useEffect(() => {
+    armazenaDados();
+  }, [tarefas]);
 
   const adicionaTarefa = (t) => {
     if (t.length > 0) {
