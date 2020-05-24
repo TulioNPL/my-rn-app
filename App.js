@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TextInput, KeyboardAvoidingView, Platform, Button, Keyboard, AsyncStorage, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TextInput, KeyboardAvoidingView, Platform, AsyncStorage, TouchableOpacity } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
 import Constants from 'expo-constants';
 import NavBar from './componentes/navbar';
 import Tarefas from './componentes/tarefas';
+import { Container, Content, H1, Button, Text, Item, Label, Input, Toast, Root } from 'native-base';
 
 export default function App() {
-  let _input;
   const [tarefas, setTarefas] = useState([]);
   const [campo, setCampo] = useState('');
 
@@ -67,8 +67,11 @@ export default function App() {
 
       setTarefas([...tarefas, novaTarefa]);
       setCampo('');
+      Toast.show({
+        text: "Tarefa adicionada!",
+        position: "top",
+      });
     }
-    _input.blur();
   }
 
   const alteraTarefa = (id, d) => {
@@ -76,83 +79,72 @@ export default function App() {
     let novaLista = [...tarefas];
     novaLista[i].descricao = d;
     setTarefas(novaLista);
+    Toast.show({
+      text: "Tarefa alterada!",
+      position: "top",
+    });
   }
 
-  const apagaTarefa = (id) => setTarefas(tarefas.filter((t) => t.id !== id));
+  const apagaTarefa = (id) => {
+    setTarefas(tarefas.filter((t) => t.id !== id));
+    Toast.show({
+      text: "Tarefa removida!",
+      position: "top",
+    });
+  };
 
-  return !compativel || !autenticavel || autenticado ? (
-    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} style={estilos.app}>
-      <View style={estilos.conteudo}>
-        <NavBar estado={tarefas.length + ' tarefas pendentes.'} />
-        <Tarefas lista={tarefas} onAltera={alteraTarefa} onApaga={apagaTarefa} />
-        <View style={estilos.caixaCampo}>
-          <TextInput
-            style={estilos.campo}
-            placeholder="Nova Tarefa"
-            defaultValue={campo}
-            onChangeText={(campo) => setCampo(campo)}
-            onSubmitEditing={() => adicionaTarefa(campo)}
-            onBlur={Keyboard.dismiss}
-            ref={(r) => (_input = r)}
-          />
-          <Button onPress={() => adicionaTarefa(campo)} title="Adicionar" />
-        </View>
-      </View>
-    </KeyboardAvoidingView>
-  ) : (
-    <View style={estilos.login}>
-      <Text style={estilos.loginTexto}>To ferrado 1.0</Text>
-      <TouchableOpacity style={estilos.loginBotao} onPress={autenticar}>
-        <Text style={estilos.loginBotaoTexto}>Entrar</Text>
-      </TouchableOpacity>
-    </View>
+  return (
+    <Root>
+      {!compativel || !autenticavel || autenticado ? ( 
+        <Container>
+          <NavBar estado={tarefas.length} />
+          <Content>
+            <Item stackedLabel style={estilos.campo}>
+              <Label>Nova Tarefa</Label>
+              <Input 
+                defaultValue={campo}
+                onChangeText={(campo) => setCampo(campo)}
+                onSubmitEditing={() => adicionaTarefa(campo)}
+              />
+            </Item>
+            <Tarefas 
+              lista={tarefas} 
+              onAltera={alteraTarefa} 
+              onApaga={apagaTarefa} 
+            />
+          </Content>
+        </Container>
+      ) : (
+        <Container style={estilos.container}>
+          <Content contentContainerStyle={estilos.login}>
+            <H1 style={estilos.loginTexto}>Tô ferrado 1.0</H1>
+            <Button light large onPress={autenticar}>
+              <Text>Entrar</Text>
+            </Button>
+          </Content>
+        </Container>
+      )}
+    </Root>
   );
 }
 const estilos = StyleSheet.create({
-  app: {
-    flexDirection: 'column',
-    flex: 1,
+  container: {
     backgroundColor: '#306090',
-  },
-  conteudo: {
-    flex: 1,
-    flexDirection: 'column',
-    marginTop: Constants.statusBarHeight,
-    justifyContent: 'space-evenly',
-    backgroundColor: 'white',
-  },
-  caixaCampo: {
-    margin: 15,
-    height: 50,
-    flexDirection: 'row',
-  },
-  campo: {
-    borderWidth: 1,
-    padding: 10,
-    fontSize: 20,
-    flex: 1,
-  },
+  },  
   login: {
-    backgroundColor: '#306090',
     justifyContent: 'center',
+    flex: 0.9,
     alignItems: 'center',
-    flex: 1,
-  },
+  }, 
   loginTexto: {
-    fontSize: 45,
     color: 'white',
+    fontSize: 50,
     fontWeight: 'bold',
+    height: 80,
+    paddingTop: 30,
   },
-  loginBotao: {
-    marginTop: 20,
-    borderWidth: 1,
-    borderColor: 'white',
-    backgroundColor: '#D0D0D0',
-    padding: 15,
-    width: 200,
-  },
-  loginBotaoTexto: {
-    textAlign: 'center',
-    fontSize: 20,
-  }
+  campo:{
+    backgroundColor: '#EAEAEA',
+    margin: 10,
+  },  
 });

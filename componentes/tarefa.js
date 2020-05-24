@@ -1,64 +1,45 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Keyboard } from 'react-native';
+import { StyleSheet } from 'react-native';
+import {Input, Text, Button, ListItem, Icon} from 'native-base';
 
 export default function Tarefa(props) {
     const [campo, setCampo] = useState(props.descricao);
     const [altera, setAltera] = useState(false);
     const confirma = () => {
         setAltera(false);
-        Keyboard.dismiss;
         props.onAltera(props.id,campo);
     }
 
-    return (
-        <View>
-            {altera ? (
-                <View style={estilos.caixaTarefa}>
-                    <TextInput style={estilos.campo}
-                        defaultValue={props.descricao}
-                        onChangeText={(c) => setCampo(c)}
-                        onSubmitEditing={confirma}
-                        onBlur={confirma}
-                        autoFocus
-                    />
-                </View>
-            ) : (
-                <View style={estilos.caixaTarefa}>
-                    <Text style={estilos.textoTarefa}>{props.descricao}</Text>
-                    <TouchableOpacity onPress={() => setAltera(true)}>
-                        <Text style={estilos.botaoEditar}>Editar</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => props.onApaga(props.id)}>
-                        <Text style={estilos.botaoApagar}>Apagar</Text>
-                    </TouchableOpacity>
-                </View>
-            )}
-        </View>
+    return altera ? (
+        <ListItem style={estilos.caixaTarefa}>
+            <Input style={estilos.campo}
+                defaultValue={props.descricao}
+                onChangeText={(c) => setCampo(c)}
+                onSubmitEditing={confirma}
+                autoFocus
+            />
+        </ListItem>
+    ) : (
+        <ListItem>
+            <Text style={estilos.texto}>{props.descricao}</Text>
+            <Button small info style={estilos.botao} onPress={() => setAltera(true)}>
+                <Icon type="FontAwesome" name="edit"/>
+            </Button>
+            <Button small danger style={estilos.botao} onPress={() => props.onApaga(props.id)}>
+                <Icon type="FontAwesome" name="trash"/>
+            </Button>
+        </ListItem>
     );
 }
 
 const estilos = StyleSheet.create({
-    caixaTarefa: {
-        padding: 15,
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    textoTarefa: {
-        fontSize: 16,
-        flex: 1,
-    },
-    botaoEditar: {
-        padding: 10,
-        color: '#FFFFFF',
-        backgroundColor: '#0260E8'
-    },
-    botaoApagar: {
-        padding: 10,
-        color: '#FFFFFF',
-        backgroundColor: '#B40A1B',
-    },
-    campo: {
-        fontSize: 20,
+    texto: {
         flex:1,
-    }
+    },
+    botao: {
+        marginLeft: 5,
+    },
+    campo:{
+        backgroundColor: '#EAEAEA',
+    },  
 })

@@ -1,30 +1,28 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { Left, Title, Right, Badge, Header } from 'native-base';
 
 export default function NavBar({ estado }) {
     return (
-        <View style={estilos.navbar}>
-            <Text style={estilos.navbarText}>To ferrado</Text>
-            <Text style={estilos.navbarSmallText}>{estado}</Text>
-        </View>
+        <Header style={estilos.header} iosBarStyle="light-content">
+            <Left>
+                <Title style={estilos.title}>Tô ferrado</Title>
+            </Left>
+            <Right>
+                <Badge info>
+                    <Text>{estado}</Text>
+                </Badge>
+            </Right>
+        </Header>
     );
 }
 
 const estilos = StyleSheet.create({
-    navbar: {
+    header:{
         backgroundColor: '#306090',
-        padding: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
     },
-    navbarText: {
+    title:{
         color: 'white',
-        fontWeight: 'bold',
         fontSize: 30,
-    },
-    navbarSmallText: {
-        color: 'white',
-        fontSize: 15,
     }
 })
